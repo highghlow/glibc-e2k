@@ -165,6 +165,9 @@ extern void _Unwind_SetIP (struct _Unwind_Context *, _Unwind_Ptr);
 extern _Unwind_Word _Unwind_GetCFA (struct _Unwind_Context *);
 
 #ifdef __e2k__
+#ifndef _Unwind_GetPCSP
+extern _Unwind_Word _Unwind_GetPCSP (struct _Unwind_Context *);
+#endif
 /* @@@ Retrieve the PCSP of the context preceding the given one.  */
 extern _Unwind_Word _Unwind_GetPCSP (struct _Unwind_Context *);
 #endif /* __e2k__  */

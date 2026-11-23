@@ -21,6 +21,10 @@
 #include <sysdep.h>
 #include <unwind-resume.h>
 
+#ifndef _Unwind_GetPCSP
+extern _Unwind_Word _Unwind_GetPCSP (struct _Unwind_Context *);
+#endif
+
 static struct unwind_link *
 link (void)
 {

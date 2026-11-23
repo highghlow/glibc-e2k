@@ -5,6 +5,9 @@
 #define UNWIND_LINK_FRAME_STATE_FOR 1
 #define UNWIND_LINK_FRAME_ADJUSTMENT 0
 
+#ifndef _Unwind_GetPCSP
+extern _Unwind_Word _Unwind_GetPCSP (struct _Unwind_Context *);
+#endif
 
 #define UNWIND_LINK_EXTRA_FIELDS \
   __typeof (_Unwind_GetPCSP) *ptr__Unwind_GetPCSP;

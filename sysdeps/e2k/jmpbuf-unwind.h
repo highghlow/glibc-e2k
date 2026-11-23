@@ -4,6 +4,10 @@
 
 /* Definitions of E2K-specific register types and macros.  */
 
+#ifndef _Unwind_GetPCSP
+extern _Unwind_Word _Unwind_GetPCSP (struct _Unwind_Context *);
+#endif
+
 #define	E2K_VA_SIZE	48
 #define	E2K_VA_MSB	(E2K_VA_SIZE - 1)
 
