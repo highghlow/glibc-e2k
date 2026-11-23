@@ -1147,19 +1147,17 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		{
 #ifdef COMPILE_WSCANF
 		  /* We have to emit the code to get into the initial
-		     state.  __wcrtomb also stores the terminating null
-		     byte, which is included in N.  */
+		     state.  */
 		  char buf[MB_LEN_MAX];
 		  size_t n = __wcrtomb (buf, L'\0', &state);
-		  if (__glibc_unlikely (n == (size_t) -1))
-		    encode_error ();
-		  if ((flags & MALLOC) && str - *strptr + n > strsize)
+		  if (n > 0 && (flags & MALLOC)
+		      && str + n >= *strptr + strsize)
 		    {
 		      /* Enlarge the buffer.  */
 		      size_t strleng = str - *strptr;
 		      char *newstr;
 
-		      newstr = (char *) realloc (*strptr, strleng + n);
+		      newstr = (char *) realloc (*strptr, strleng + n + 1);
 		      if (newstr == NULL)
 			{
 			  if (flags & POSIX_MALLOC)
@@ -1179,14 +1177,13 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 			{
 			  *strptr = newstr;
 			  str = newstr + strleng;
-			  strsize = strleng + n;
+			  strsize = strleng + n + 1;
 			}
 		    }
 
 		  str = __mempcpy (str, buf, n);
-#else
-		  *str++ = '\0';
 #endif
+		  *str++ = '\0';
 
 		  if ((flags & MALLOC) && str - *strptr != strsize)
 		    {
@@ -1888,6 +1885,16 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		}
 	      else
 		{
+#if defined __e2k__ && defined  __ptr128__
+		  /* It's crucial that in PM a `sscanf ()'ed fake pointer was
+		     initialized via a pointer to a pointer, not to an integer
+		     so as to avoid junk in its hi part (Bug #144786). Here one
+		     implicitly makes use of the fact that only LONG flag is
+		     set for "%p" and that `need_long == 1' in PM.  */
+		  if (flags & READ_POINTER)
+		    *ARG (void **) = (void *) num.ul;
+		  else
+#endif /* defined __e2k__ && defined __ptr128__  */
 		  if (need_longlong && (flags & LONGDBL))
 		    *ARG (unsigned LONGLONG int *) = num.uq;
 		  else if (need_long && (flags & LONG))
@@ -2947,19 +2954,17 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		{
 #ifdef COMPILE_WSCANF
 		  /* We have to emit the code to get into the initial
-		     state.  __wcrtomb also stores the terminating null
-		     byte, which is included in N.  */
+		     state.  */
 		  char buf[MB_LEN_MAX];
 		  size_t n = __wcrtomb (buf, L'\0', &state);
-		  if (__glibc_unlikely (n == (size_t) -1))
-		    encode_error ();
-		  if ((flags & MALLOC) && str - *strptr + n > strsize)
+		  if (n > 0 && (flags & MALLOC)
+		      && str + n >= *strptr + strsize)
 		    {
 		      /* Enlarge the buffer.  */
 		      size_t strleng = str - *strptr;
 		      char *newstr;
 
-		      newstr = (char *) realloc (*strptr, strleng + n);
+		      newstr = (char *) realloc (*strptr, strleng + n + 1);
 		      if (newstr == NULL)
 			{
 			  if (flags & POSIX_MALLOC)
@@ -2979,14 +2984,13 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 			{
 			  *strptr = newstr;
 			  str = newstr + strleng;
-			  strsize = strleng + n;
+			  strsize = strleng + n + 1;
 			}
 		    }
 
 		  str = __mempcpy (str, buf, n);
-#else
-		  *str++ = '\0';
 #endif
+		  *str++ = '\0';
 
 		  if ((flags & MALLOC) && str - *strptr != strsize)
 		    {

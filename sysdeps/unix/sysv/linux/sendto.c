@@ -31,5 +31,19 @@ __libc_sendto (int fd, const void *buf, size_t len, int flags,
 			    addrlen);
 #endif
 }
+
+#if ! (defined __e2k__ && defined SHARED)
+
 weak_alias (__libc_sendto, sendto)
+
+#else /* defined __e2k__ && defined SHARED  */
+
+# include <shlib-compat.h>
+
+weak_alias (__libc_sendto, __libc_sendto_weak)
+versioned_symbol (libc, __libc_sendto_weak, sendto, GLIBC_2_0);
+compat_symbol (libpthread, __libc_sendto_weak, sendto, GLIBC_2_0);
+
+#endif /* defined __e2k__ && defined SHARED  */
+
 weak_alias (__libc_sendto, __sendto)

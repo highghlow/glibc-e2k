@@ -30,6 +30,22 @@ __libc_recv (int fd, void *buf, size_t len, int flags)
   return SOCKETCALL_CANCEL (recv, fd, buf, len, flags);
 #endif
 }
+
+#if ! (defined __e2k__ && defined SHARED)
+
 weak_alias (__libc_recv, recv)
+
+#else /* defined __e2k__ && defined SHARED  */
+
+# include <shlib-compat.h>
+
+weak_alias (__libc_recv, __libc_recv_weak)
+versioned_symbol (libc, __libc_recv_weak, recv, GLIBC_2_0);
+compat_symbol (libpthread, __libc_recv_weak, recv, GLIBC_2_0);
+
+# endif /* defined __e2k__ && defined SHARED  */
+
+/* There is no need to create a compat for __recv which has never been present
+   in libpthread.so.  */
 weak_alias (__libc_recv, __recv)
 libc_hidden_weak (__recv)

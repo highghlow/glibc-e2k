@@ -31,4 +31,22 @@ __libc_accept (int fd, __SOCKADDR_ARG addr, socklen_t *len)
 #endif
 }
 weak_alias (__libc_accept, accept)
+
+#if ! (defined __e2k__ && defined SHARED)
+
 libc_hidden_def (accept)
+
+#else /* defined __e2k__ && defined SHARED  */
+/* Note that it's __GI_accept that is made WEAK by weak_alias (...) a few lines
+   above, not accept and thus not accept@@GLIBC_2.2 which is actually GLOBAL in
+   up-to-date libc.so.  */
+# include <shlib-compat.h>
+/* This strong alias is required in order to get rid of HIDDEN inherent to
+   __libc_accept.  */
+strong_alias (__libc_accept, __accept_strong)
+versioned_symbol (libc, __accept_strong, accept, GLIBC_2_0);
+
+/* However, in libpthread-2.29.so accept@@GLIBC_2.0 was WEAK.  */
+weak_alias (__libc_accept, __accept_2_0_weak)
+compat_symbol (libpthread, __accept_2_0_weak, accept, GLIBC_2_0);
+#endif /* defined __e2k__ && defined SHARED  */

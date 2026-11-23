@@ -1,0 +1,23 @@
+struct kernel_stat
+{
+    unsigned int st_dev;
+    unsigned long long int st_ino;
+    unsigned int st_mode;
+    unsigned int st_nlink;
+    unsigned int st_uid;
+    unsigned int st_gid;
+    unsigned int st_rdev;
+    unsigned long long int st_size;
+    unsigned long long int st_blksize;
+    unsigned long long int st_blocks;
+    long long int st_atime_sec;
+    unsigned long long int st_atime_nsec;
+    long long int st_mtime_sec;
+    unsigned long long int st_mtime_nsec;
+    long long int st_ctime_sec;
+    unsigned long long int st_ctime_nsec;
+};
+
+#define STAT_IS_KERNEL_STAT 0
+#define XSTAT_IS_XSTAT64 1
+#define STATFS_IS_STATFS64	1

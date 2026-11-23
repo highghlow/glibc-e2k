@@ -31,5 +31,19 @@ __libc_recvfrom (int fd, void *buf, size_t len, int flags,
 			    addrlen);
 #endif
 }
+
+#if ! (defined __e2k__ && defined SHARED)
+
 weak_alias (__libc_recvfrom, recvfrom)
+
+#else /* defined __e2k__ && defined SHARED  */
+
+#include <shlib-compat.h>
+
+weak_alias (__libc_recvfrom, __libc_recvfrom_weak)
+versioned_symbol (libc, __libc_recvfrom_weak, recvfrom, GLIBC_2_0);
+compat_symbol (libpthread, __libc_recvfrom_weak, recvfrom, GLIBC_2_0);
+
+#endif /* defined __e2k__ && defined SHARED  */
+
 weak_alias (__libc_recvfrom, __recvfrom)

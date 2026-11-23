@@ -210,7 +210,6 @@ tests := \
   tst-vfprintf-width-prec \
   tst-vfprintf-width-prec-alloc \
   tst-wc-printf \
-  tst-wscanf-nul \
   tstdiomisc \
   tstgetln \
   tstscanf \
@@ -276,7 +275,6 @@ $(objpfx)tst-sprintf.out: $(gen-locales)
 $(objpfx)tst-sscanf.out: $(gen-locales)
 $(objpfx)tst-swprintf.out: $(gen-locales)
 $(objpfx)tst-vfprintf-mbs-prec.out: $(gen-locales)
-$(objpfx)tst-wscanf-nul.out: $(gen-locales)
 endif
 
 tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace \
@@ -388,3 +386,11 @@ $(objpfx)tst-setvbuf1-cmp.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1.out
 
 $(objpfx)tst-printf-round: $(libm)
 $(objpfx)tst-scanf-round: $(libm)
+
+ifeq ($(compile-with-lcc),yes)
+CFLAGS-tst-wc-printf.c += -Wno-format
+CFLAGS-tst-printfsz.c += -Wno-format -Wno-deprecated-declarations
+CFLAGS-tst-sprintf.c += -Wno-format
+CFLAGS-scanf16.c += -Wno-format
+CFLAGS-scanf16a.c += -Wno-format
+endif

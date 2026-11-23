@@ -258,12 +258,12 @@ CFLAGS-xmkdirp.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
 # 32-bit platforms.
 CFLAGS-temp_file.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
 
-ifeq (,$(CXX))
+# ifeq (,$(CXX))
 LINKS_DSO_PROGRAM = links-dso-program-c
-else
-LINKS_DSO_PROGRAM = links-dso-program
-LDLIBS-links-dso-program = -lstdc++ -lgcc -lgcc_s $(libunwind)
-endif
+# else
+# LINKS_DSO_PROGRAM = links-dso-program
+# LDLIBS-links-dso-program = -lstdc++ -lgcc -lgcc_s $(libunwind)
+# endif
 
 ifeq (yes,$(have-selinux))
 LDLIBS-$(LINKS_DSO_PROGRAM) += -lselinux
